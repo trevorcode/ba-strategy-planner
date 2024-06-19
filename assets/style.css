@@ -1,0 +1,51 @@
+* {
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+}
+
+.container {
+    background-color: blue;
+    display: flex;
+    height: 100vh
+}
+
+nav {
+    background-color: green;
+    width: 100px;
+    padding: 8px;
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        align-items: center;
+        list-style-type: none;
+    }
+
+    button {
+        background-color: #04AA6D;
+        border: none;
+        color: white;
+        padding: 8px 8px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        aspect-ratio: 1/1;
+
+        &:hover {
+            background-color: blue;
+        }
+
+        & selected {
+            background-color: yellow;
+        }
+
+    }
+}
+
+main {
+    background-color: antiquewhite;
+    flex: 1 0;
+}
