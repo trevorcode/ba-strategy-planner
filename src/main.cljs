@@ -13,13 +13,12 @@
 (add-watch map-translation-matrix :watch-map-translation
            (fn [_ _ _ {:keys [x y zoom]}]
              (let [g (:g svg-refs)
-
                    matrix (str "matrix(" zoom
                                ", 0, 0, " zoom
                                ", " x ", "
                                y ")")]
-               (set! g.style.transform matrix)
-               #_(set! svg.style.transform (str "translate(" x "px," y "px)")))))
+
+               (set! g.style.transform matrix))))
 
 (add-watch selected-tool :watch-tool
            (fn [key atom old new]
@@ -118,7 +117,20 @@
      "wheel"
      (fn [e]
        (e.preventDefault)
-       (swap! map-translation-matrix update :zoom (fn [z] (- z (* 0.001 e.deltaY))))))
+       (let [[x y] (get-internal-position e.clientX e.clientY)
+             matrix (.getCTM (:g svg-refs))
+             new-matrix (-> matrix
+                            (.translate x y)
+                            (.scale (- 1 (* 0.001 e.deltaY)))
+                            (.translate (- 1 x) (- 1 y)))]
+         (println new-matrix)
+
+         (swap! map-translation-matrix
+                (fn [m]
+                  (-> m
+                      (assoc :zoom new-matrix.a)
+                      (assoc :x new-matrix.e)
+                      (assoc :y new-matrix.f)))))))
 
     (container.addEventListener
      "mouseup"
