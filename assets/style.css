@@ -1,3 +1,28 @@
+:root {
+    --color-primary-a0: #ffffff;
+    --color-primary-a10: #ccd7c8;
+    --color-primary-a20: #9ab194;
+    --color-primary-a30: #6a8c63;
+    --color-primary-a40: #3b6834;
+    --color-primary-a50: #014504;
+    --color-primary-a60: #093807;
+    --color-primary-a70: #0d2b07;
+    --color-primary-a80: #0e1f06;
+    --color-primary-a90: #071403;
+
+    --color-secondary-a0: #ffffff;
+    --color-secondary-a10: #fee4d1;
+    --color-secondary-a20: #fac8a4;
+    --color-secondary-a30: #f3ae78;
+    --color-secondary-a40: #ea934b;
+    --color-secondary-a50: #de7818;
+    --color-secondary-a60: #ae5f18;
+    --color-secondary-a70: #804817;
+    --color-secondary-a80: #553113;
+    --color-secondary-a90: #2d1c0d;
+}
+
+
 * {
     box-sizing: border-box;
     margin: 0px;
@@ -5,54 +30,56 @@
 }
 
 .container {
-    background-color: blue;
     display: flex;
     height: 100vh
 }
 
 nav {
-    background-color: green;
-    width: 100px;
-    padding: 8px;
+    background-color: var(--color-primary-a80);
+    width: 80px;
+    padding: 20px 0 0 0;
 
     ul {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 8px;
         align-items: center;
         list-style-type: none;
     }
 
     button {
-        background-color: #04AA6D;
-        border: none;
-        color: white;
-        padding: 8px 8px;
+        background-color: var(--color-primary-a60);
+        border-radius: 10px;
+        border: 1px solid var(--color-primary-a40);
+        color: var(--color-primary-a0);
+        padding: 6px;
         text-align: center;
         text-decoration: none;
         display: inline-block;
         font-size: 16px;
         aspect-ratio: 1/1;
-        width: 80px;
+        width: 60px;
 
         &:hover {
-            background-color: blue;
+            background-color: var(--color-primary-a30);
             cursor: pointer;
         }
 
         &.selected {
-            background-color: blue;
+            background-color: var(--color-secondary-a60);
+            border: 1px solid var(--color-secondary-a40);
         }
 
     }
 }
 
 main {
-    background-color: antiquewhite;
+    background-color: var(--color-primary-a90);
     flex: 1 0;
 }
 
-#svg-container, #map {
-    width:100%;
-    height:100%;
+#svg-container,
+#map {
+    width: 100%;
+    height: 100%;
 }
