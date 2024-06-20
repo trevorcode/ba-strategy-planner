@@ -1,14 +1,13 @@
 :root {
     --color-primary-a0: #ffffff;
-    --color-primary-a10: #d9ded8;
-    --color-primary-a20: #b5beb2;
-    --color-primary-a30: #929e8d;
-    --color-primary-a50: #70806a;
-    --color-primary-a60: #535f4f;
-    --color-primary-a70: #383f36;
-    --color-primary-a80: #1f221e;
+    --color-primary-a10: #cfd4d7;
+    --color-primary-a20: #a0aaaf;
+    --color-primary-a30: #73828a;
+    --color-primary-a50: #495c66;
+    --color-primary-a60: #38454c;
+    --color-primary-a70: #272f34;
+    --color-primary-a80: #171b1d;
     --color-primary-a90: #000000;
-
 
     --color-secondary-a0: #ffffff;
     --color-secondary-a10: #fee4d1;
@@ -20,6 +19,27 @@
     --color-secondary-a70: #804817;
     --color-secondary-a80: #553113;
     --color-secondary-a90: #2d1c0d;
+
+    --color-accent-a0: #ffffff;
+    --color-accent-a10: #deecf4;
+    --color-accent-a20: #bcd9e9;
+    --color-accent-a30: #99c6df;
+    --color-accent-a50: #74b4d4;
+    --color-accent-a60: #57849a;
+    --color-accent-a70: #3b5664;
+    --color-accent-a80: #212d33;
+    --color-accent-a90: #000000;
+
+    --color-gray-a0: #ffffff;
+    --color-gray-a10: #d5d6d7;
+    --color-gray-a20: #adafb1;
+    --color-gray-a30: #878a8c;
+    --color-gray-a50: #626669;
+    --color-gray-a60: #494c4e;
+    --color-gray-a70: #323435;
+    --color-gray-a80: #1c1d1e;
+    --color-gray-a90: #000000;
+
 }
 
 
@@ -35,9 +55,11 @@
 }
 
 nav {
-    background-color: var(--color-primary-a80);
+    background-color: var(--color-gray-a80);
     width: 80px;
     padding: 20px 0 0 0;
+    color: var(--color-accent-a0);
+    text-align: center;
 
     ul {
         display: flex;
@@ -45,12 +67,13 @@ nav {
         gap: 8px;
         align-items: center;
         list-style-type: none;
+        margin: 10px 0;
     }
 
     button {
         background-color: var(--color-primary-a60);
         border-radius: 10px;
-        border: 1px solid var(--color-primary-a40);
+        border: 2px solid var(--color-accent-a50);
         color: var(--color-primary-a0);
         padding: 6px;
         text-align: center;
@@ -67,14 +90,14 @@ nav {
 
         &.selected {
             background-color: var(--color-secondary-a60);
-            border: 1px solid var(--color-secondary-a40);
+            border: 2px solid var(--color-secondary-a40);
         }
 
     }
 }
 
 main {
-    background-color: var(--color-primary-a60);
+    background-color: var(--color-gray-a60);
     flex: 1 0;
 }
 
@@ -82,4 +105,31 @@ main {
 #map {
     width: 100%;
     height: 100%;
+}
+
+.color-picker {
+    width: 70px;
+    position: absolute;
+    margin-left: 170px;
+    border-radius: 10px;
+    border: 2px solid var(--color-accent-a50);
+    background-color: var(--color-gray-a80);
+    padding: 10px;
+    display: none;
+
+    &.visible {
+        display: inline-block;
+    }
+
+    ul {
+        list-style-type: none;
+    }
+
+    button {
+        width: 30px;
+        aspect-ratio: 1/1;
+        border: 2px solid white;
+
+
+    }
 }
