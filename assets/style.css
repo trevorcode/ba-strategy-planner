@@ -1,14 +1,14 @@
 :root {
     --color-primary-a0: #ffffff;
-    --color-primary-a10: #ccd7c8;
-    --color-primary-a20: #9ab194;
-    --color-primary-a30: #6a8c63;
-    --color-primary-a40: #3b6834;
-    --color-primary-a50: #014504;
-    --color-primary-a60: #093807;
-    --color-primary-a70: #0d2b07;
-    --color-primary-a80: #0e1f06;
-    --color-primary-a90: #071403;
+    --color-primary-a10: #d9ded8;
+    --color-primary-a20: #b5beb2;
+    --color-primary-a30: #929e8d;
+    --color-primary-a50: #70806a;
+    --color-primary-a60: #535f4f;
+    --color-primary-a70: #383f36;
+    --color-primary-a80: #1f221e;
+    --color-primary-a90: #000000;
+
 
     --color-secondary-a0: #ffffff;
     --color-secondary-a10: #fee4d1;
@@ -74,7 +74,7 @@ nav {
 }
 
 main {
-    background-color: var(--color-primary-a90);
+    background-color: var(--color-primary-a60);
     flex: 1 0;
 }
 

@@ -45,23 +45,38 @@
              [:circle {:cx "500" :cy "500" :r "50" :fill "red"}]]]]]])
 
 (defn start-drag [state container e]
-  (let [current-matrix @map-translation-matrix]
+  (let [g (.getCTM (:g svg-refs))
+        gx g.e
+        gy g.f]
     (aset state :isDragging true)
-    (aset state :startX (- e.clientX current-matrix.x))
-    (aset state :startY (- e.clientY current-matrix.y))
+    (aset state :startX (- e.clientX gx))
+    (aset state :startY (- e.clientY gy))
     (set! container.style.cursor "grabbing")))
+
+(defn get-internal-position [mouseX mouseY]
+  (let [svg (:svg svg-refs)
+        g (:g svg-refs)
+        svgRect (.getBoundingClientRect (:svg svg-refs))
+        svgX (- mouseX svgRect.left)
+        svgY (- mouseY svgRect.top)
+        pt (.createSVGPoint svg)
+        _ (set! pt.x svgX)
+        _ (set! pt.y svgY)
+        internalPt (pt.matrixTransform (.inverse (g.getCTM)))]
+    [internalPt.x internalPt.y]))
 
 (defn start-draw [state e]
   (let [current-matrix @map-translation-matrix
-        x (- e.clientX current-matrix.x)
-        y (- e.clientY current-matrix.y)
+        [x y] (get-internal-position e.clientX e.clientY)
         newPath (js/document.createElementNS "http://www.w3.org/2000/svg" "path")]
     (aset state :isDrawing true)
     (aset state :currentPath newPath)
+    (aset state :startX x)
+    (aset state :startY y)
 
     (newPath.setAttribute "d" (str "M " x " " y))
     (newPath.setAttribute "stroke" "white")
-    (newPath.setAttribute "stroke-width" "2")
+    (newPath.setAttribute "stroke-width" "6")
     (newPath.setAttribute "fill" "none")
 
     (.appendChild (:g svg-refs) newPath)))
@@ -95,17 +110,13 @@
                         (assoc :y y))))))
 
        (when state.isDrawing
-         (let [x (- e.clientX state.startX)
-               y (- e.clientY state.startY)
+         (let [[x y] (get-internal-position e.clientX e.clientY)
                d (state.currentPath.getAttribute "d")]
-           (state.currentPath.setAttribute "d" (str d " L " x " " y))
-           
-           ))))
+           (state.currentPath.setAttribute "d" (str d " L " x " " y))))))
 
     (container.addEventListener
      "wheel"
      (fn [e]
-       (println e)
        (e.preventDefault)
        (swap! map-translation-matrix update :zoom (fn [z] (- z (* 0.001 e.deltaY))))))
 
