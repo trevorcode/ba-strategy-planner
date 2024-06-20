@@ -67,13 +67,6 @@
                      (.-classList)
                      (.remove "visible"))))))
 
-;; (defn string->html [html-string]
-;;     (let [template (js/document.createElement "template")]
-;;       (set! template.innerHTML html-string)
-    ;;   (if (= 1 (count template.content.children))
-    ;;     (first template.content.children)
-    ;;     template.content.children)))
-
 
 ;; (defclass ColorPicker
 ;;   (extends HTMLElement)

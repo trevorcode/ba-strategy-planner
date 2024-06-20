@@ -48,7 +48,13 @@
           [:div {:id "svg-container"}
            [:svg {:id "map" :class "map-viewer" :xmlns "http://www.w3.org/2000/svg"}
             [:g {:id "map-content"}
-             [:image {:href "assets/battlemap.png"}]]]]]])
+             [:image {:href "assets/battlemap.png"}]
+             [:rect {:id "eraser"
+                     :x 0
+                     :y 0
+                     :width 200
+                     :height 200
+                     :fill "blue"}]]]]]])
 
 (defn start-drag [state container e]
   (let [g (.getCTM (:g svg-refs))
@@ -90,17 +96,18 @@
 
     (.appendChild (:g svg-refs) newPath)))
 
+
+
 (defn start-erase [state e]
   (let [[x y] (get-internal-position e.clientX e.clientY)
-        new-eraser (js/document.createElementNS "http://www.w3.org/2000/svg"
-                                                #html [:rect {:id "eraser"
-                                                              :x x
-                                                              :y y
-                                                              :width 20
-                                                              :height 20
-                                                              :fill "gray"}])]
-
-    (.appendChild (:g svg-refs) new-eraser)
+        eraser-elem (js/document.createElementNS "http://www.w3.org/2000/svg" "rect")]
+    (eraser-elem.setAttribute :x (- x 10))
+    (eraser-elem.setAttribute :width 20)
+    (eraser-elem.setAttribute :height 20)
+    (eraser-elem.setAttribute :fill "gray")
+    (eraser-elem.setAttribute :y (- y 10))
+    (.appendChild (:g svg-refs) eraser-elem)
+    (set! state.eraser-elem eraser-elem)
 
     (aset state :isErasing true)))
 
@@ -115,6 +122,7 @@
         state {:isDragging false
                :isDrawing false
                :isErasing false
+               :eraser-elem nil
                :pathPoints []
                :currentPath nil
                :startX nil
@@ -162,7 +170,11 @@
 
        (when state.isErasing
          (let [[x y] (get-internal-position e.clientX e.clientY)
-               paths (js/document.querySelectorAll "paths")]))))
+               eraser state.eraser-elem
+               paths (js/document.querySelectorAll "paths")]
+
+           (eraser.setAttribute :x (- x 10))
+           (eraser.setAttribute :y (- y 10))))))
 
     (container.addEventListener
      "wheel"
