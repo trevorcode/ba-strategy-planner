@@ -3,4 +3,6 @@
   dev:nrepl (shell "npx squint nrepl-server :port 1888")
   dev:vite (shell "npx vite")
   -dev {:depends [dev:vite dev:squint dev:nrepl]}
-  dev (run '-dev {:parallel true})}}
+  dev (run '-dev {:parallel true})}
+
+ build (shell "npx vite build")}

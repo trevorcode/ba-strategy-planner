@@ -3,4 +3,5 @@
 /.lsp
 /.nrepl-port
 /node_modules
-/public
+/public/*.mjs
+/dist
