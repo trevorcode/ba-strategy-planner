@@ -45,7 +45,6 @@
 
 (add-watch color-state :watch-color-state
            (fn [_ _ _ {:keys [toggled? primary-color secondary-color] :as new}]
-             (println new)
 
              (-> (js/document.querySelector "button[color-selector=primary]")
                  .-style
