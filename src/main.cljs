@@ -2,7 +2,7 @@
   (:require [util :as u]
             [colorpicker :as c]))
 
-(def selected-tool (atom :hand))
+(def selected-tool (atom :pen))
 (def map-translation-matrix (atom {:x 0
                                    :y 0
                                    :zoom 1}))
@@ -143,7 +143,10 @@
              0 (start-draw state e true)
              2 (start-draw state e false))
 
-           :eraser (start-erase state e)))))
+           :eraser (case e.button
+                     0 (start-erase state e)
+                     1 (start-drag state container e)
+                     2 (start-drag state container e))))))
 
     (container.addEventListener
      "mousemove"
