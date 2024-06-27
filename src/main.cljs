@@ -1,6 +1,7 @@
 (ns main
   (:require [util :as u]
-            [colorpicker :as c]))
+            [colorpicker :as c]
+            [unitpicker :as unit]))
 
 (def selected-tool (atom :pen))
 (def map-translation-matrix (atom {:x 0
@@ -9,7 +10,9 @@
 
 (def svg-refs {:svg nil
                :container nil
-               :g nil})
+               :g nil
+               :images nil
+               :paths nil})
 
 (add-watch map-translation-matrix :watch-map-translation
            (fn [_ _ _ {:keys [x y zoom]}]
@@ -33,22 +36,28 @@
   (reset! selected-tool tool))
 
 (def initial-template
-  #html [:div {:class "container"}
-         [:nav
-          [:ul
-           [:li [:button {:tool "hand"} [:i {:data-feather "move"}]]]
-           [:li [:button {:tool "pen"} [:i {:data-feather "edit-2"}]]]
-           [:li [:button {:tool "eraser"} [:i {:data-feather "x-square"}]]]]
-          [:span "Color Picker"]
-          [:ul
-           [:li [:button {:color-selector :primary}]]
-           [:li [:button {:color-selector :secondary}]]
-           c/color-picker]]
-         [:main
-          [:div {:id "svg-container"}
-           [:svg {:id "map" :class "map-viewer" :xmlns "http://www.w3.org/2000/svg"}
-            [:g {:id "map-content"}
-             [:image {:href "assets/battlemap.png"}]]]]]])
+  #html [:div [:div {:class "container"}
+               [:nav
+                [:ul
+                 [:li [:button {:tool "hand"} [:i {:data-feather "move"}]]]
+                 [:li [:button {:tool "pen"} [:i {:data-feather "edit-2"}]]]
+                 [:li [:button {:tool "eraser"} [:i {:data-feather "x-square"}]]]]
+                [:span "Color Picker"]
+                [:ul
+                 [:li [:button {:color-selector :primary}]]
+                 [:li [:button {:color-selector :secondary}]]
+                 c/color-picker]
+                [:div
+                 unit/unit-picker-btn]]
+               [:main
+                [:div {:id "svg-container"}
+                 [:svg {:id "map" :class "map-viewer" :xmlns "http://www.w3.org/2000/svg"}
+                  [:g {:id "map-content"}
+                   [:g {:id "background"}
+                    [:image {:href "assets/battlemap.png"}]]
+                   [:g {:id "map-images"}]
+                   [:g {:id "map-paths"}]]]]]]
+         unit/unit-picker-el])
 
 (defn start-drag [state container e]
   (let [g (.getCTM (:g svg-refs))
@@ -88,7 +97,7 @@
     (newPath.setAttribute "stroke-width" "6")
     (newPath.setAttribute "fill" "none")
 
-    (.appendChild (:g svg-refs) newPath)))
+    (.appendChild (:paths svg-refs) newPath)))
 
 
 
@@ -225,7 +234,9 @@
 
   (set! svg-refs {:container (js/document.querySelector "#svg-container")
                   :svg (js/document.querySelector "#map")
-                  :g (js/document.querySelector "#map-content")})
+                  :g (js/document.querySelector "#map-content")
+                  :images (js/document.querySelector "#map-images")
+                  :paths (js/document.querySelector "#map-paths")})
 
   (register-buttons)
   (c/initialize-color-picker)
