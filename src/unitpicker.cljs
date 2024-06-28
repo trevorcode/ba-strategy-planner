@@ -75,19 +75,30 @@
 
 (defn place-unit [state svg-refs e primary?]
   (let [[x y] (u/get-internal-position e.clientX e.clientY svg-refs)
+        group (js/document.createElementNS "http://www.w3.org/2000/svg" "g")
+        unit-container (js/document.createElementNS "http://www.w3.org/2000/svg" "rect")
         unit-elem (js/document.createElementNS "http://www.w3.org/2000/svg" "image")
         unit (:selected-unit @unit-picker-state)
         color (if primary?
                 (:primary-color @c/color-state)
                 (:secondary-color @c/color-state))]
+    (unit-container.setAttribute :stroke color)
+    (unit-container.setAttribute :stroke-width 4)
+    (unit-container.setAttribute :fill "none")
+    (unit-container.setAttribute :x (- x 25))
+    (unit-container.setAttribute :width 50)
+    (unit-container.setAttribute :height 50)
+    (unit-container.setAttribute :y (- y 25))
+
     (unit-elem.setAttribute :href (str "assets/units/" unit ".png"))
-    (unit-elem.setAttribute :class "map-unit-image")
-    (unit-elem.setAttribute :fill color)
     (unit-elem.setAttribute :x (- x 25))
     (unit-elem.setAttribute :width 50)
     (unit-elem.setAttribute :height 50)
     (unit-elem.setAttribute :y (- y 25))
-    (.appendChild (:images svg-refs) unit-elem)))
+
+    (.appendChild group unit-container)
+    (.appendChild group unit-elem)
+    (.appendChild (:images svg-refs) group)))
 
 (defn initialize []
 
