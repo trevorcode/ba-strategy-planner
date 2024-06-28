@@ -1,23 +1,29 @@
 (ns colorpicker
   (:require [squint.core :refer [defclass]]))
 
+(def colors ["#88eaff"
+             "#5f8ad3"
+             "#eee1ae"
+             "#ffa788"
+             "yellow"
+             "green"
+             "blue"
+             "purple"
+             "black"
+             "white"])
 
 (def color-state (atom {:toggled? false
-                        :primary-color :blue
-                        :secondary-color :red
+                        :primary-color (first colors)
+                        :secondary-color (second colors)
                         :choosing-color :primary}))
+
+(defn color-picker-btn [color]
+  #html [:button {:color color :style (str "background-color:" color)}])
 
 (def color-picker
   #html [:div {:class "color-picker"}
          [:ul
-          [:li [:button {:color "red" :style (str "background-color:" "red")}]]
-          [:li [:button {:color "orange" :style (str "background-color:" "orange")}]]
-          [:li [:button {:color "yellow" :style (str "background-color:" "yellow")}]]
-          [:li [:button {:color "green" :style (str "background-color:" "green")}]]
-          [:li [:button {:color "blue" :style (str "background-color:" "blue")}]]
-          [:li [:button {:color "purple" :style (str "background-color:" "purple")}]]
-          [:li [:button {:color "black" :style (str "background-color:" "black")}]]
-          [:li [:button {:color "white" :style (str "background-color:" "white")}]]]])
+          (mapv (fn [color] #html [:li (color-picker-btn color)]) colors)]])
 
 (defn select-color [color]
   (swap! color-state (fn [state]
