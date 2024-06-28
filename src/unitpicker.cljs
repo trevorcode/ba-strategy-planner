@@ -48,7 +48,6 @@
 
 (def unit-picker-btn
   #html [:div
-         [:span "Unit Picker"]
          [:ul
           [:li
            [:button {:class "unit-placer-btn ba-button" :tool :unitplacer}]
