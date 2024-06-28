@@ -7,6 +7,6 @@
    (case (.toLowerCase e.key)
      "q" (toolpicker/select-tool :pen)
      "e" (toolpicker/select-tool :eraser)
-     "r" (toolpicker/select-tool :unitplacej)
+     "r" (toolpicker/select-tool :unitplace)
      nil)))
 
