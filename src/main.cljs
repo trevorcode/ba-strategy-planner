@@ -1,9 +1,10 @@
 (ns main
   (:require [util :as u]
             [colorpicker :as c]
-            [unitpicker :as unit]))
+            [unitpicker :as unit]
+            [toolpicker :as tool]
+            [hotkeys :as h]))
 
-(def selected-tool (atom :pen))
 (def map-translation-matrix (atom {:x 0
                                    :y 0
                                    :zoom 1}))
@@ -23,17 +24,6 @@
                                y ")")]
 
                (set! g.style.transform matrix))))
-
-(add-watch selected-tool :watch-tool
-           (fn [key atom old new]
-             (let [btns (js/document.querySelectorAll "nav button")]
-               (doseq [btn btns]
-                 (if (= new (btn.getAttribute :tool))
-                   (btn.classList.add "selected")
-                   (btn.classList.remove "selected"))))))
-
-(defn select-tool [tool]
-  (reset! selected-tool tool))
 
 (def initial-template
   #html [:div [:div {:class "container"}
@@ -131,7 +121,7 @@
      (fn [e]
        (e.preventDefault)
 
-       (let [tool @selected-tool]
+       (let [tool @tool/selected-tool]
          (case tool
            :hand (start-drag state container e)
            :pen
@@ -211,13 +201,7 @@
      (fn [e]
        (mouse-up container state)))))
 
-(defn register-buttons []
-  (doseq [btn (js/document.querySelectorAll "nav button[tool]")]
-    (btn.addEventListener
-     "click"
-     (fn [] (select-tool (btn.getAttribute :tool)))))
 
-  (reset! selected-tool @selected-tool))
 
 (defn init []
   (-> (js/document.querySelector "body")
@@ -230,7 +214,7 @@
                   :images (js/document.querySelector "#map-images")
                   :paths (js/document.querySelector "#map-paths")})
 
-  (register-buttons)
+  (tool/init)
   (c/initialize-color-picker)
   (unit/initialize)
   (register-map)

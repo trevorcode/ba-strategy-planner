@@ -119,11 +119,9 @@
                  (set! (unit-image selected-unit)))
 
              (if toggled?
-               (do
-                 (-> (js/document.querySelector ".unit-picker-container")
-                     (.-classList)
-                     (.add "visible")))
-               (do
-                 (-> (js/document.querySelector ".unit-picker-container")
-                     (.-classList)
-                     (.remove "visible"))))))
+               (-> (js/document.querySelector ".unit-picker-container")
+                   (.-classList)
+                   (.add "visible"))
+               (-> (js/document.querySelector ".unit-picker-container")
+                   (.-classList)
+                   (.remove "visible")))))
