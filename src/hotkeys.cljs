@@ -5,7 +5,8 @@
  "keydown"
  (fn [e]
    (case (.toLowerCase e.key)
-     "q" (toolpicker/select-tool :pen)
+     "q" (toolpicker/select-tool :hand)
+     "w" (toolpicker/select-tool :pen)
      "e" (toolpicker/select-tool :eraser)
      "r" (toolpicker/select-tool :unitplacer)
      nil)))
