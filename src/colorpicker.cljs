@@ -6,8 +6,8 @@
              "#eee1ae"
              "#ffa788"
              "yellow"
+             "red"
              "green"
-             "blue"
              "purple"
              "black"
              "white"])
