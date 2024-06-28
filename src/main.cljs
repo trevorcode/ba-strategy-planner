@@ -39,13 +39,12 @@
   #html [:div [:div {:class "container"}
                [:nav
                 [:ul
-                 [:li [:button {:tool "hand"} [:i {:data-feather "move"}]]]
-                 [:li [:button {:tool "pen"} [:i {:data-feather "edit-2"}]]]
-                 [:li [:button {:tool "eraser"} [:i {:data-feather "x-square"}]]]]
-                [:span "Color Picker"]
+                 [:li [:button {:class "ba-button" :tool "hand"} [:i {:data-feather "move"}]]]
+                 [:li [:button {:class "ba-button" :tool "pen"} [:i {:data-feather "edit-2"}]]]
+                 [:li [:button {:class "ba-button" :tool "eraser"} [:i {:data-feather "x-square"}]]]]
                 [:ul
-                 [:li [:button {:color-selector :primary}]]
-                 [:li [:button {:color-selector :secondary}]]
+                 [:li [:button {:class "ba-button" :color-selector :primary}]]
+                 [:li [:button {:class "ba-button" :color-selector :secondary}]]
                  c/color-picker]
                 [:div
                  unit/unit-picker-btn]]
@@ -59,6 +58,7 @@
                    [:g {:id "map-paths"}]]]]]]
          unit/unit-picker-el])
 
+
 (defn start-drag [state container e]
   (let [g (.getCTM (:g svg-refs))
         gx g.e
@@ -68,20 +68,8 @@
     (aset state :startY (- e.clientY gy))
     (set! container.style.cursor "grabbing")))
 
-(defn get-internal-position [mouseX mouseY]
-  (let [svg (:svg svg-refs)
-        g (:g svg-refs)
-        svgRect (.getBoundingClientRect (:svg svg-refs))
-        svgX (- mouseX svgRect.left)
-        svgY (- mouseY svgRect.top)
-        pt (.createSVGPoint svg)
-        _ (set! pt.x svgX)
-        _ (set! pt.y svgY)
-        internalPt (pt.matrixTransform (.inverse (g.getCTM)))]
-    [internalPt.x internalPt.y]))
-
 (defn start-draw [state e primary?]
-  (let [[x y] (get-internal-position e.clientX e.clientY)
+  (let [[x y] (u/get-internal-position e.clientX e.clientY svg-refs)
         newPath (js/document.createElementNS "http://www.w3.org/2000/svg" "path")
         color (if primary?
                 (:primary-color @c/color-state)
@@ -102,7 +90,7 @@
 
 
 (defn start-erase [state e]
-  (let [[x y] (get-internal-position e.clientX e.clientY)
+  (let [[x y] (u/get-internal-position e.clientX e.clientY svg-refs)
         eraser-elem (js/document.createElementNS "http://www.w3.org/2000/svg" "rect")]
     (eraser-elem.setAttribute :x (- x 10))
     (eraser-elem.setAttribute :width 20)
@@ -155,7 +143,12 @@
            :eraser (case e.button
                      0 (start-erase state e)
                      1 (start-drag state container e)
-                     2 (start-drag state container e))))))
+                     2 (start-drag state container e))
+
+           :unitplacer (case e.button
+                         0 (unit/place-unit state svg-refs e true)
+                         1 (start-drag state container e)
+                         2 (unit/place-unit state svg-refs e false))))))
 
     (container.addEventListener
      "mousemove"
@@ -170,22 +163,23 @@
                         (assoc :y y))))))
 
        (when state.isDrawing
-         (let [[x y] (get-internal-position e.clientX e.clientY)
+         (let [[x y] (u/get-internal-position e.clientX e.clientY svg-refs)
                d (state.currentPath.getAttribute "d")]
            (when (> (u/distance [x y] (last state.pathPoints)) 5)
              (conj! state.pathPoints [x y])
              (state.currentPath.setAttribute "d" (str d " L " x " " y)))))
 
        (when state.isErasing
-         (let [[x y] (get-internal-position e.clientX e.clientY)
+         (let [[x y] (u/get-internal-position e.clientX e.clientY svg-refs)
                eraser state.eraser
                eraserBox (eraser.getBBox)
-               paths (-> (:g svg-refs) (.querySelectorAll "path"))]
-
-           (doseq [path paths]
-             (let [pathBox (path.getBBox)]
+               paths (-> (:paths svg-refs) .-children)
+               images (-> (:images svg-refs) .-children)
+               elems (concat paths images)]
+           (doseq [elem elems]
+             (let [pathBox (elem.getBBox)]
                (when (u/intersects? eraserBox pathBox)
-                 (path.parentNode.removeChild path))))
+                 (elem.parentNode.removeChild elem))))
 
            (eraser.setAttribute :x (- x 10))
            (eraser.setAttribute :y (- y 10))))))
@@ -194,7 +188,7 @@
      "wheel"
      (fn [e]
        (e.preventDefault)
-       (let [[x y] (get-internal-position e.clientX e.clientY)
+       (let [[x y] (u/get-internal-position e.clientX e.clientY svg-refs)
              matrix (.getCTM (:g svg-refs))
              new-matrix (-> matrix
                             (.translate x y)
@@ -223,8 +217,6 @@
      "click"
      (fn [] (select-tool (btn.getAttribute :tool)))))
 
-
-
   (reset! selected-tool @selected-tool))
 
 (defn init []
@@ -240,6 +232,7 @@
 
   (register-buttons)
   (c/initialize-color-picker)
+  (unit/initialize)
   (register-map)
 
   (js/feather.replace))

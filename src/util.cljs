@@ -17,3 +17,15 @@
            (< (+ rect1.x rect1.width) rect2.x)
            (> rect1.y (+ rect2.y rect2.height))
            (< (+ rect1.y rect1.height) rect2.y))))
+
+(defn get-internal-position [mouseX mouseY svg-refs]
+  (let [svg (:svg svg-refs)
+        g (:g svg-refs)
+        svgRect (.getBoundingClientRect (:svg svg-refs))
+        svgX (- mouseX svgRect.left)
+        svgY (- mouseY svgRect.top)
+        pt (.createSVGPoint svg)
+        _ (set! pt.x svgX)
+        _ (set! pt.y svgY)
+        internalPt (pt.matrixTransform (.inverse (g.getCTM)))]
+    [internalPt.x internalPt.y]))
