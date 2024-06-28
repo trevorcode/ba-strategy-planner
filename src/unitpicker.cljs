@@ -43,7 +43,7 @@
             :valkyrie
             :wasp])
 
-(def unit-picker-state (atom {:toggled? true
+(def unit-picker-state (atom {:toggled? false
                               :selected-unit (first units)}))
 
 (def unit-picker-btn
@@ -83,10 +83,10 @@
                 (:secondary-color @c/color-state))]
     (unit-elem.setAttribute :href (str "assets/units/" unit ".png"))
     (unit-elem.setAttribute :class "map-unit-image")
+    (unit-elem.setAttribute :fill color)
     (unit-elem.setAttribute :x (- x 25))
     (unit-elem.setAttribute :width 50)
     (unit-elem.setAttribute :height 50)
-    (unit-elem.setAttribute :fill "gray")
     (unit-elem.setAttribute :y (- y 25))
     (.appendChild (:images svg-refs) unit-elem)))
 
