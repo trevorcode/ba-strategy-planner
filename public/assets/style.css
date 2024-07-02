@@ -79,7 +79,7 @@
 
 nav {
     background-color: var(--color-gray-a80);
-    width: 80px;
+    width: 85px;
     padding: 20px 0 0 0;
     color: var(--color-accent-a0);
     text-align: center;
@@ -140,17 +140,17 @@ main {
     }
 }
 
-.unit-picker-btn {
+.expand-btn {
     position: absolute;
     width: 15px;
     height: 60px;
-    margin-left: -10px;
+    margin-left: -15px;
 
     border-radius: 0;
 }
 
 .unit-picker-container {
-    display: none;
+    display: flex;
     position: absolute;
     top: 0;
     left: 0;
@@ -159,10 +159,6 @@ main {
     background-color: #1c1d1eAA;
     justify-content: center;
     align-items: center;
-
-    &.visible {
-        display: flex;
-    }
 }
 
 .unit-picker {
@@ -175,9 +171,9 @@ main {
     padding: 14px;
     display: flex;
 
-
     ul {
         display: flex;
+        align-content: flex-start;
         flex-wrap: wrap;
         list-style-type: none;
         gap: 6px;
@@ -210,6 +206,4 @@ main {
     }
 }
 
-.map-unit-image {
-
-}
+.map-unit-image {}
