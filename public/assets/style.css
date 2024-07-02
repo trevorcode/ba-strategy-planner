@@ -202,4 +202,26 @@ main {
     }
 }
 
-.map-unit-image {}
+.tooltip {
+    position: relative;
+
+}
+
+.tooltip:hover::after {
+    content: attr(tooltip);
+    display: block;
+    position: absolute;
+    background-color: #00000099;
+    padding: 8px 16px;
+    border-radius: 8px;
+}
+
+.tooltip.right::after {
+    left: 105%;
+    top: 25%;
+}
+
+.tooltip.top::after {
+    left: 0%;
+    top: -50%;
+}

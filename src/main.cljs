@@ -36,9 +36,15 @@
   #html [:div [:div {:class "container"}
                [:nav
                 [:ul
-                 [:li (tool/tool-btn "hand" "" (components/icon "move"))]
-                 [:li (tool/tool-btn "pen" "" (components/icon "edit-2"))]
-                 [:li (tool/tool-btn "eraser" "" (components/icon "x-square"))]
+                 [:li (tool/tool-btn {:tool "hand"
+                                      :tooltip "Move Tool [Q]"
+                                      :body (components/icon "move")})]
+                 [:li (tool/tool-btn {:tool "pen"
+                                      :tooltip "Pen [W]"
+                                      :body (components/icon "edit-2")})]
+                 [:li (tool/tool-btn {:tool "eraser"
+                                      :tooltip "Eraser [E]"
+                                      :body (components/icon "x-square")})]
                  unit/unit-picker-btn]
                 [:div c/colorpicker]]
                [:main

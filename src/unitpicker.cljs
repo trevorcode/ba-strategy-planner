@@ -66,9 +66,11 @@
 (def unit-picker-btn
   #html
    [:li
-    (t/tool-btn "unitplacer" "unit-placer-btn"
-                #html [:img {:x-data nil
-                             :x-bind:src "$store.units.selectedUnitUrl"}])
+    (t/tool-btn {:tool "unitplacer"
+                 :tooltip "Unit Placer [R]"
+                 :class "unit-placer-btn"
+                 :body #html [:img {:x-data nil
+                                    :x-bind:src "$store.units.selectedUnitUrl"}]})
     (components/option-expander {:id "unit-picker-btn"
                                  :x-on:click "$store.units.toggle()"})])
 
@@ -80,6 +82,8 @@
     [:div {:class "unit-picker"}
      [:ul
       (mapv (fn [u] #html [:li [:button {:unit u
+                                         :class "tooltip top"
+                                         :tooltip u
                                          :x-on:click (str "$store.units.select('" u "')")}
                                 (unit-image u)]]) units)]]])
 
