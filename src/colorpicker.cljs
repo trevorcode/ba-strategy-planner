@@ -1,5 +1,5 @@
 (ns colorpicker
-  (:require [squint.core :refer [defclass]]))
+  (:require ["alpinejs" :as a :refer [Alpine]]))
 
 (def colors ["#88eaff"
              "#5f8ad3"
@@ -12,62 +12,39 @@
              "black"
              "white"])
 
-(def color-state (atom {:toggled? false
-                        :primary-color (first colors)
-                        :secondary-color (second colors)
-                        :choosing-color :primary}))
+(def color-store (do (Alpine.store "colors"
+                                   {:toggled false
+                                    :toggle (fn [primary]
+                                              (set! color-store.choosingColor primary)
+                                              (set! color-store.toggled (not color-store.toggled)))
+                                    :primaryColor (first colors)
+                                    :secondaryColor (second colors)
+                                    :choosingColor :primary
+                                    :selectColor (fn [color]
+                                                   (set! color-store.toggled false)
+                                                   (if (= color-store.choosingColor color-store.primaryColor)
+                                                     (set! color-store.primaryColor color)
+                                                     (set! color-store.secondaryColor color)))})
+                     (Alpine.store "colors")))
 
 (defn color-picker-btn [color]
-  #html [:button {:color color :style (str "background-color:" color)}])
-
-(def color-picker
-  #html [:div {:class "color-picker"}
-         [:ul
-          (mapv (fn [color] #html [:li (color-picker-btn color)]) colors)]])
-
-(defn select-color [color]
-  (swap! color-state (fn [state]
-                       (-> state
-                           (assoc :toggled? false)
-                           (assoc (str (:choosing-color state) "-color") color)))))
-
-(defn initialize-color-picker []
-  (doseq [btn (js/document.querySelectorAll "button[color]")]
-    (btn.addEventListener
-     "click"
-     (fn [] (select-color (btn.getAttribute :color)))))
-
-  (doseq [btn (js/document.querySelectorAll "button[color-selector]")]
-    (btn.addEventListener
-     "click"
-     (fn []  (swap! color-state
-                    (fn [s]
-                      (-> s
-                          (assoc :choosing-color (btn.getAttribute :color-selector))
-                          (update :toggled? (fn [t] (not t)))))))))
+  #html [:button {:color color
+                  :x-on:click (str "$store.colors.selectColor('" color "')")
+                  :style (str "background-color:" color)}])
 
 
-  (reset! color-state @color-state))
-
-(add-watch color-state :watch-color-state
-           (fn [_ _ _ {:keys [toggled? primary-color secondary-color] :as new}]
-
-             (-> (js/document.querySelector "button[color-selector=primary]")
-                 .-style
-                 .-backgroundColor
-                 (set! primary-color))
-
-             (-> (js/document.querySelector "button[color-selector=secondary]")
-                 .-style
-                 .-backgroundColor
-                 (set! secondary-color))
-
-             (if toggled?
-               (do
-                 (-> (js/document.querySelector ".color-picker")
-                     (.-classList)
-                     (.add "visible")))
-               (do
-                 (-> (js/document.querySelector ".color-picker")
-                     (.-classList)
-                     (.remove "visible"))))))
+(def colorpicker
+  #html
+   [:ul
+    [:li [:button {:class "ba-button"
+                   :color-selector :primary
+                   :x-bind:style "{ backgroundColor: $store.colors.primaryColor}"
+                   :x-on:click "$store.colors.toggle('primary')"}]]
+    [:li [:button {:class "ba-button"
+                   :color-selector :secondary
+                   :x-bind:style "{ backgroundColor: $store.colors.secondaryColor}"
+                   :x-on:click "$store.colors.toggle('secondary')"}]]
+    [:div {:class "color-picker"
+           :x-show "$store.colors.toggled"}
+     [:ul
+      (mapv (fn [color] #html [:li (color-picker-btn color)]) colors)]]])

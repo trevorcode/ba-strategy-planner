@@ -50,7 +50,6 @@
 (def unit-store (do (Alpine.store "units"
                                   {:toggled false
                                    :toggle (fn []
-                                             (println js/this.toggled)
                                              (set! js/this.toggled (not js/this.toggled)))
                                    :selectedUnit (first units)
                                    :selectedUnitUrl (str "assets/units/" (first units) ".png")
@@ -68,9 +67,8 @@
   #html
    [:li
     (t/tool-btn "unitplacer" "unit-placer-btn"
-                         #html [:img {;;:src (str "assets/units/" (first units) ".png")
-                                      :x-data nil
-                                      :x-bind:src "$store.units.selectedUnitUrl"}])
+                #html [:img {:x-data nil
+                             :x-bind:src "$store.units.selectedUnitUrl"}])
     (components/option-expander {:id "unit-picker-btn"
                                  :x-on:click "$store.units.toggle()"})])
 
@@ -93,8 +91,8 @@
         unit-elem (js/document.createElementNS "http://www.w3.org/2000/svg" "image")
         unit unit-store.selectedUnit
         color (if primary?
-                (:primary-color @c/color-state)
-                (:secondary-color @c/color-state))]
+                c/color-store.primaryColor
+                c/color-store.secondaryColor)]
     (unit-container.setAttribute :stroke color)
     (unit-container.setAttribute :stroke-width 4)
     (unit-container.setAttribute :fill "none")

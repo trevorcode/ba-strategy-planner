@@ -41,10 +41,7 @@
                  [:li (tool/tool-btn "pen" "" (components/icon "edit-2"))]
                  [:li (tool/tool-btn "eraser" "" (components/icon "x-square"))]
                  unit/unit-picker-btn]
-                [:ul
-                 [:li [:button {:class "ba-button" :color-selector :primary}]]
-                 [:li [:button {:class "ba-button" :color-selector :secondary}]]
-                 c/color-picker]]
+                [:div c/colorpicker]]
                [:main
                 [:div {:id "svg-container"}
                  [:svg {:id "map" :class "map-viewer" :xmlns "http://www.w3.org/2000/svg"}
@@ -69,8 +66,8 @@
   (let [[x y] (u/get-internal-position e.clientX e.clientY svg-refs)
         newPath (js/document.createElementNS "http://www.w3.org/2000/svg" "path")
         color (if primary?
-                (:primary-color @c/color-state)
-                (:secondary-color @c/color-state))]
+                c/color-store.primaryColor
+                c/color-store.secondaryColor)]
     (aset state :isDrawing true)
     (aset state :currentPath newPath)
     (aset state :startX x)
@@ -217,7 +214,6 @@
                   :g (js/document.querySelector "#map-content")
                   :images (js/document.querySelector "#map-images")
                   :paths (js/document.querySelector "#map-paths")})
-  (c/initialize-color-picker)
   (register-map)
   (js/feather.replace))
 

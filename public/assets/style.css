@@ -113,11 +113,7 @@ main {
     border: 2px solid var(--color-accent-a50);
     background-color: var(--color-gray-a80);
     padding: 10px;
-    display: none;
-
-    &.visible {
-        display: inline-block;
-    }
+    display: inline-block;
 
     ul {
         list-style-type: none;
