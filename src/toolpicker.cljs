@@ -4,6 +4,8 @@
 (def toolstore (do (Alpine.store "tools"
                                  {:selectedTool :pen
                                   :select (fn [tool]
+                                            (when (and (= tool :pen) (= toolstore.selectedTool :pen))
+                                              (toolstore.togglePenStyle))
                                             (set! toolstore.selectedTool tool))
                                   :penStyle :solid
                                   :togglePenStyle (fn []
@@ -13,8 +15,6 @@
                    (Alpine.store "tools")))
 
 (defn select-tool [tool]
-  (when (and (= tool :pen) (= toolstore.selectedTool :pen))
-    (toolstore.togglePenStyle))
   (toolstore.select tool))
 
 (defn tool-btn [tool class body]
