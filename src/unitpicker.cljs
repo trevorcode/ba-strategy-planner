@@ -78,7 +78,8 @@
    [:div {:class "unit-picker-container"
           :x-data nil
           :x-show "$store.units.toggled"}
-    [:div {:class "unit-picker"}
+    [:div {:class "unit-picker"
+           :x-on:click.outside "$store.units.toggle()"}
      [:ul
       (mapv (fn [u] #html [:li [:button {:unit u
                                          :class "tooltip top"

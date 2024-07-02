@@ -45,6 +45,7 @@
                    :x-bind:style "{ backgroundColor: $store.colors.secondaryColor}"
                    :x-on:click "$store.colors.toggle('secondary')"}]]
     [:div {:class "color-picker"
-           :x-show "$store.colors.toggled"}
+           :x-show "$store.colors.toggled"
+           :x-on:click.outside "$store.colors.toggle()"}
      [:ul
       (mapv (fn [color] #html [:li (color-picker-btn color)]) colors)]]])
