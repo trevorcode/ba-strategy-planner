@@ -1,5 +1,6 @@
 (ns hotkeys
-  (:require [toolpicker :as toolpicker]))
+  (:require [toolpicker :as toolpicker]
+            [unitpicker :as u]))
 
 (js/document.addEventListener
  "keydown"
@@ -8,6 +9,6 @@
      "q" (toolpicker/select-tool :hand)
      "w" (toolpicker/select-tool :pen)
      "e" (toolpicker/select-tool :eraser)
-     "r" (toolpicker/select-tool :unitplacer)
+     "r" (u/unit-store.toggle)
      nil)))
 

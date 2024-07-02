@@ -69,10 +69,9 @@
     (t/tool-btn {:tool "unitplacer"
                  :tooltip "Unit Placer [R]"
                  :class "unit-placer-btn"
+                 :x-bind:onclick "$store.units.toggle()"
                  :body #html [:img {:x-data nil
-                                    :x-bind:src "$store.units.selectedUnitUrl"}]})
-    (components/option-expander {:id "unit-picker-btn"
-                                 :x-on:click "$store.units.toggle()"})])
+                                    :x-bind:src "$store.units.selectedUnitUrl"}]})])
 
 (def unit-picker-el
   #html
@@ -83,14 +82,14 @@
      [:ul
       (mapv (fn [u] #html [:li [:button {:unit u
                                          :class "tooltip top"
+                                         :x-bind:class
+                                         (str "{'selected': $store.units.selectedUnit == '" u "'}")
                                          :tooltip u
                                          :x-on:click (str "$store.units.select('" u "')")}
                                 (unit-image u)]]) units)]]])
 
-
-(defn place-unit [state svg-refs e primary?]
-  (let [[x y] (u/get-internal-position e.clientX e.clientY svg-refs)
-        group (js/document.createElementNS "http://www.w3.org/2000/svg" "g")
+(defn place-unit-on-map [x y svg-refs primary?]
+  (let [group (js/document.createElementNS "http://www.w3.org/2000/svg" "g")
         unit-container (js/document.createElementNS "http://www.w3.org/2000/svg" "rect")
         unit-elem (js/document.createElementNS "http://www.w3.org/2000/svg" "image")
         unit unit-store.selectedUnit
@@ -114,3 +113,7 @@
     (.appendChild group unit-container)
     (.appendChild group unit-elem)
     (.appendChild (:images svg-refs) group)))
+
+(defn place-unit [state svg-refs e primary?]
+  (let [[x y] (u/get-internal-position e.clientX e.clientY svg-refs)]
+    (place-unit-on-map x y svg-refs primary?)))

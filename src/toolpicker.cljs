@@ -17,10 +17,11 @@
 (defn select-tool [tool]
   (toolstore.select tool))
 
-(defn tool-btn [{:keys [tool class body tooltip]}]
+(defn tool-btn [{:keys [tool class body tooltip x-bind:onclick]}]
   #html [:button {:tool tool
                   :tooltip tooltip
                   :class (str "ba-button " (when tooltip "tooltip right ") class)
                   :x-data nil
                   :x-bind:class (str "$store.tools.selectedTool=='" tool "' ? 'selected' : ''")
-                  :x-on:click (str "$store.tools.select('" tool "')")} body])
+                  :x-on:click (or x-bind:onclick (str "$store.tools.select('" tool "')"))} 
+         body])
