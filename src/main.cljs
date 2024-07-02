@@ -3,6 +3,7 @@
             [colorpicker :as c]
             [unitpicker :as unit]
             [toolpicker :as tool]
+            [penpicker :as pen]
             [hotkeys :as h]))
 
 (def map-translation-matrix (atom {:x 0
@@ -30,7 +31,7 @@
                [:nav
                 [:ul
                  [:li [:button {:class "ba-button" :tool "hand"} [:i {:data-feather "move"}]]]
-                 [:li [:button {:class "ba-button" :tool "pen"} [:i {:data-feather "edit-2"}]]]
+                 pen/pen-picker-btn
                  [:li [:button {:class "ba-button" :tool "eraser"} [:i {:data-feather "x-square"}]]]]
                 [:ul
                  [:li [:button {:class "ba-button" :color-selector :primary}]]

@@ -1,6 +1,7 @@
 (ns unitpicker
   (:require [util :as u]
-            [colorpicker :as c]))
+            [colorpicker :as c]
+            [components :as components]))
 
 (def units [:advancedrecall
             :airship
@@ -51,7 +52,7 @@
          [:ul
           [:li
            [:button {:class "unit-placer-btn ba-button" :tool :unitplacer}]
-           [:button {:class "unit-picker-btn ba-button"} ">"]]]])
+           (components/option-expander "unit-picker-btn")]]])
 
 (defn unit-image [unit]
   #html [:img {:src (str "assets/units/" unit ".png")}])
@@ -102,7 +103,7 @@
 
 (defn initialize []
 
-  (-> (js/document.querySelector ".unit-picker-btn")
+  (-> (js/document.querySelector "#unit-picker-btn")
       (.addEventListener "click" (fn [] (toggle-picker))))
 
   (doseq [btn (js/document.querySelectorAll "button[unit]")]
