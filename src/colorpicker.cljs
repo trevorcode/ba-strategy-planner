@@ -71,22 +71,3 @@
                  (-> (js/document.querySelector ".color-picker")
                      (.-classList)
                      (.remove "visible"))))))
-
-
-;; (defclass ColorPicker
-;;   (extends HTMLElement)
-
-;;   (constructor
-;;    [this]
-;;    (do
-;;      (super)
-;;      (let [shadowRoot (this.attachShadow {:mode "open"})
-;;            template (js/document.createElement "template")]
-
-;;        (set! template.innerHTML #html [:div "hello world!"])
-;;        (shadowRoot.appendChild (if (= 1 (count template.content.children))
-;;                                  (first template.content.children)
-;;                                  template.content.children)))))
-;;   )
-
-;; (js/customElements.define "color-picker" ColorPicker)

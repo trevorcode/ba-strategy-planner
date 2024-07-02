@@ -1,7 +1,10 @@
 (ns unitpicker
-  (:require [util :as u]
-            [colorpicker :as c]
-            [components :as components]))
+  (:require
+   ["alpinejs" :refer [Alpine]]
+   [util :as u]
+   [colorpicker :as c]
+   [toolpicker :as t]
+   [components :as components]))
 
 (def units [:advancedrecall
             :airship
@@ -44,42 +47,51 @@
             :valkyrie
             :wasp])
 
-(def unit-picker-state (atom {:toggled? false
-                              :selected-unit (first units)}))
-
-(def unit-picker-btn
-  #html [:div
-         [:ul
-          [:li
-           [:button {:class "unit-placer-btn ba-button" :tool :unitplacer}]
-           (components/option-expander "unit-picker-btn")]]])
+(def unit-store (do (Alpine.store "units"
+                                  {:toggled false
+                                   :toggle (fn []
+                                             (println js/this.toggled)
+                                             (set! js/this.toggled (not js/this.toggled)))
+                                   :selectedUnit (first units)
+                                   :selectedUnitUrl (str "assets/units/" (first units) ".png")
+                                   :select (fn [unit]
+                                             (set! js/this.toggled false)
+                                             (set! t/toolstore.selectedTool :unitplacer)
+                                             (set! js/this.selectedUnit unit)
+                                             (set! js/this.selectedUnitUrl (str "assets/units/" unit ".png")))})
+                    (Alpine.store "units")))
 
 (defn unit-image [unit]
   #html [:img {:src (str "assets/units/" unit ".png")}])
 
+(def unit-picker-btn
+  #html
+   [:li
+    (t/tool-btn "unitplacer" "unit-placer-btn"
+                         #html [:img {;;:src (str "assets/units/" (first units) ".png")
+                                      :x-data nil
+                                      :x-bind:src "$store.units.selectedUnitUrl"}])
+    (components/option-expander {:id "unit-picker-btn"
+                                 :x-on:click "$store.units.toggle()"})])
+
 (def unit-picker-el
   #html
-   [:div {:class "unit-picker-container"}
+   [:div {:class "unit-picker-container"
+          :x-data nil
+          :x-show "$store.units.toggled"}
     [:div {:class "unit-picker"}
      [:ul
-      (mapv (fn [u] #html [:li [:button {:unit u} (unit-image u)]]) units)]]])
+      (mapv (fn [u] #html [:li [:button {:unit u
+                                         :x-on:click (str "$store.units.select('" u "')")}
+                                (unit-image u)]]) units)]]])
 
-(defn select-unit [unit]
-  (swap! unit-picker-state (fn [state]
-                             (-> state
-                                 (assoc :toggled? false)
-                                 (assoc :selected-unit unit)))))
-
-(defn toggle-picker []
-  (swap! unit-picker-state (fn [state] (-> state
-                                           (update :toggled? (fn [t] (not t)))))))
 
 (defn place-unit [state svg-refs e primary?]
   (let [[x y] (u/get-internal-position e.clientX e.clientY svg-refs)
         group (js/document.createElementNS "http://www.w3.org/2000/svg" "g")
         unit-container (js/document.createElementNS "http://www.w3.org/2000/svg" "rect")
         unit-elem (js/document.createElementNS "http://www.w3.org/2000/svg" "image")
-        unit (:selected-unit @unit-picker-state)
+        unit unit-store.selectedUnit
         color (if primary?
                 (:primary-color @c/color-state)
                 (:secondary-color @c/color-state))]
@@ -100,29 +112,3 @@
     (.appendChild group unit-container)
     (.appendChild group unit-elem)
     (.appendChild (:images svg-refs) group)))
-
-(defn initialize []
-
-  (-> (js/document.querySelector "#unit-picker-btn")
-      (.addEventListener "click" (fn [] (toggle-picker))))
-
-  (doseq [btn (js/document.querySelectorAll "button[unit]")]
-    (btn.addEventListener
-     "click"
-     (fn [] (select-unit (btn.getAttribute :unit)))))
-
-  (reset! unit-picker-state @unit-picker-state))
-
-(add-watch unit-picker-state :watch-unit-state
-           (fn [_ _ _ {:keys [toggled? selected-unit] :as new}]
-             (-> (js/document.querySelector "button[tool=unitplacer]")
-                 (.-innerHTML)
-                 (set! (unit-image selected-unit)))
-
-             (if toggled?
-               (-> (js/document.querySelector ".unit-picker-container")
-                   (.-classList)
-                   (.add "visible"))
-               (-> (js/document.querySelector ".unit-picker-container")
-                   (.-classList)
-                   (.remove "visible")))))

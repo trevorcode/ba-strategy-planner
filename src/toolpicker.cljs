@@ -1,23 +1,25 @@
-(ns toolpicker)
+(ns toolpicker
+  (:require ["alpinejs" :as a :refer [Alpine]]))
 
-
-(def selected-tool (atom :pen))
+(def toolstore (do (Alpine.store "tools"
+                                 {:selectedTool :pen
+                                  :select (fn [tool]
+                                            (set! toolstore.selectedTool tool))
+                                  :penStyle :solid
+                                  :togglePenStyle (fn []
+                                                    (set! toolstore.penStyle (if (= toolstore.penStyle :solid)
+                                                                               :dotted
+                                                                               :solid)))})
+                   (Alpine.store "tools")))
 
 (defn select-tool [tool]
-  (reset! selected-tool tool))
+  (when (and (= tool :pen) (= toolstore.selectedTool :pen))
+    (toolstore.togglePenStyle))
+  (toolstore.select tool))
 
-(add-watch selected-tool :watch-tool
-           (fn [key atom old new]
-             (let [btns (js/document.querySelectorAll "nav button")]
-               (doseq [btn btns]
-                 (if (= new (btn.getAttribute :tool))
-                   (btn.classList.add "selected")
-                   (btn.classList.remove "selected"))))))
-
-(defn init []
-  (doseq [btn (js/document.querySelectorAll "nav button[tool]")]
-    (btn.addEventListener
-     "click"
-     (fn [] (select-tool (btn.getAttribute :tool)))))
-
-  (reset! selected-tool @selected-tool))
+(defn tool-btn [tool class body]
+  #html [:button {:tool tool
+                  :class (str "ba-button " class)
+                  :x-data nil
+                  :x-bind:class (str "$store.tools.selectedTool=='" tool "' ? 'selected' : ''")
+                  :x-on:click (str "$store.tools.select('" tool "')")} body])

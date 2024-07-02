@@ -1,10 +1,17 @@
 (ns main
-  (:require [util :as u]
-            [colorpicker :as c]
-            [unitpicker :as unit]
-            [toolpicker :as tool]
-            [penpicker :as pen]
-            [hotkeys :as h]))
+  (:require
+   ["alpinejs" :as a :refer [Alpine]]
+   [util :as u]
+   [colorpicker :as c]
+   [unitpicker :as unit]
+   [toolpicker :as tool]
+   [penpicker :as pen]
+   [hotkeys :as h]
+   [components :as components]
+   [toolpicker :as t]))
+
+(set! js/window.Alpine Alpine)
+(Alpine.start)
 
 (def map-translation-matrix (atom {:x 0
                                    :y 0
@@ -30,15 +37,14 @@
   #html [:div [:div {:class "container"}
                [:nav
                 [:ul
-                 [:li [:button {:class "ba-button" :tool "hand"} [:i {:data-feather "move"}]]]
-                 pen/pen-picker-btn
-                 [:li [:button {:class "ba-button" :tool "eraser"} [:i {:data-feather "x-square"}]]]]
+                 [:li (tool/tool-btn "hand" "" (components/icon "move"))]
+                 [:li (tool/tool-btn "pen" "" (components/icon "edit-2"))]
+                 [:li (tool/tool-btn "eraser" "" (components/icon "x-square"))]
+                 unit/unit-picker-btn]
                 [:ul
                  [:li [:button {:class "ba-button" :color-selector :primary}]]
                  [:li [:button {:class "ba-button" :color-selector :secondary}]]
-                 c/color-picker]
-                [:div
-                 unit/unit-picker-btn]]
+                 c/color-picker]]
                [:main
                 [:div {:id "svg-container"}
                  [:svg {:id "map" :class "map-viewer" :xmlns "http://www.w3.org/2000/svg"}
@@ -74,11 +80,11 @@
     (newPath.setAttribute "d" (str "M " x " " y))
     (newPath.setAttribute "stroke" color)
     (newPath.setAttribute "stroke-width" "6")
+    (when (= t/toolstore.penStyle :dotted)
+      (newPath.setAttribute "stroke-dasharray" "30,15"))
     (newPath.setAttribute "fill" "none")
 
     (.appendChild (:paths svg-refs) newPath)))
-
-
 
 (defn start-erase [state e]
   (let [[x y] (u/get-internal-position e.clientX e.clientY svg-refs)
@@ -121,8 +127,7 @@
      "mousedown"
      (fn [e]
        (e.preventDefault)
-
-       (let [tool @tool/selected-tool]
+       (let [tool tool/toolstore.selectedTool]
          (case tool
            :hand (start-drag state container e)
            :pen
@@ -202,8 +207,6 @@
      (fn [e]
        (mouse-up container state)))))
 
-
-
 (defn init []
   (-> (js/document.querySelector "body")
       .-innerHTML
@@ -214,14 +217,8 @@
                   :g (js/document.querySelector "#map-content")
                   :images (js/document.querySelector "#map-images")
                   :paths (js/document.querySelector "#map-paths")})
-
-  (tool/init)
   (c/initialize-color-picker)
-  (unit/initialize)
   (register-map)
-
   (js/feather.replace))
 
 (init)
-
-
