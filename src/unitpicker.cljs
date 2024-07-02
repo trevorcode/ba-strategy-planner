@@ -6,8 +6,11 @@
    [toolpicker :as t]
    [components :as components]))
 
-(def units [:advancedrecall
+(def units [:advancedblink
+            :advancedbot
+            :advancedrecall
             :airship
+            :artillery
             :assaultbot
             :ballista
             :beetle
@@ -30,6 +33,7 @@
             :hunter
             :katbus
             :kingcrab
+            :kraken
             :locust
             :mammoth
             :missilebot
@@ -42,6 +46,7 @@
             :scorpion
             :shocker
             :stinger
+            :sniper
             :swiftshocker
             :turret
             :valkyrie
