@@ -5,7 +5,6 @@
    [colorpicker :as c]
    [unitpicker :as unit]
    [toolpicker :as tool]
-   [penpicker :as pen]
    [hotkeys :as h]
    [components :as components]
    [toolpicker :as t]))
