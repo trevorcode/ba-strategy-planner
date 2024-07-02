@@ -22,7 +22,7 @@
                                     :choosingColor :primary
                                     :selectColor (fn [color]
                                                    (set! color-store.toggled false)
-                                                   (if (= color-store.choosingColor color-store.primaryColor)
+                                                   (if (= color-store.choosingColor :primary)
                                                      (set! color-store.primaryColor color)
                                                      (set! color-store.secondaryColor color)))})
                      (Alpine.store "colors")))
