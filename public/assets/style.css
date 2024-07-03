@@ -58,7 +58,7 @@
     border-radius: 10px;
     border: 2px solid var(--color-accent-a50);
     color: var(--color-primary-a0);
-    padding: 6px;
+    padding: 2px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -155,6 +155,11 @@ main {
     background-color: #1c1d1eAA;
     justify-content: center;
     align-items: center;
+}
+
+.image-icon {
+    width: 50px;
+    aspect-ratio: 1/1;
 }
 
 .unit-picker {

@@ -29,3 +29,29 @@
         _ (set! pt.y svgY)
         internalPt (pt.matrixTransform (.inverse (g.getCTM)))]
     [internalPt.x internalPt.y]))
+
+(defn place-image-on-map [{:keys [x y imageUrl svg-refs color base-number ally] :as opts}]
+  (let [group (js/document.createElementNS "http://www.w3.org/2000/svg" "g")
+        unit-container (js/document.createElementNS "http://www.w3.org/2000/svg" "rect")
+        unit-elem (js/document.createElementNS "http://www.w3.org/2000/svg" "image")]
+    (unit-container.setAttribute :stroke color)
+    (unit-container.setAttribute :stroke-width 4)
+    (unit-container.setAttribute :fill "none")
+    (unit-container.setAttribute :x (- x 25))
+    (unit-container.setAttribute :width 50)
+    (unit-container.setAttribute :height 50)
+    (unit-container.setAttribute :y (- y 25))
+
+    (when base-number
+      (unit-elem.setAttribute :ally ally)
+      (unit-elem.setAttribute :base base-number))
+
+    (unit-elem.setAttribute :href imageUrl)
+    (unit-elem.setAttribute :x (- x 25))
+    (unit-elem.setAttribute :width 50)
+    (unit-elem.setAttribute :height 50)
+    (unit-elem.setAttribute :y (- y 25))
+
+    (.appendChild group unit-container)
+    (.appendChild group unit-elem)
+    (.appendChild (:images svg-refs) group)))

@@ -94,32 +94,12 @@
                                          :x-on:click (str "$store.units.select('" u "')")}
                                 (unit-image u)]]) units)]]])
 
-(defn place-unit-on-map [x y svg-refs primary?]
-  (let [group (js/document.createElementNS "http://www.w3.org/2000/svg" "g")
-        unit-container (js/document.createElementNS "http://www.w3.org/2000/svg" "rect")
-        unit-elem (js/document.createElementNS "http://www.w3.org/2000/svg" "image")
-        unit unit-store.selectedUnit
-        color (if primary?
-                c/color-store.primaryColor
-                c/color-store.secondaryColor)]
-    (unit-container.setAttribute :stroke color)
-    (unit-container.setAttribute :stroke-width 4)
-    (unit-container.setAttribute :fill "none")
-    (unit-container.setAttribute :x (- x 25))
-    (unit-container.setAttribute :width 50)
-    (unit-container.setAttribute :height 50)
-    (unit-container.setAttribute :y (- y 25))
-
-    (unit-elem.setAttribute :href (str "assets/units/" unit ".png"))
-    (unit-elem.setAttribute :x (- x 25))
-    (unit-elem.setAttribute :width 50)
-    (unit-elem.setAttribute :height 50)
-    (unit-elem.setAttribute :y (- y 25))
-
-    (.appendChild group unit-container)
-    (.appendChild group unit-elem)
-    (.appendChild (:images svg-refs) group)))
-
 (defn place-unit [state svg-refs e primary?]
   (let [[x y] (u/get-internal-position e.clientX e.clientY svg-refs)]
-    (place-unit-on-map x y svg-refs primary?)))
+    (u/place-image-on-map {:x x
+                           :y y
+                           :svg-refs svg-refs
+                           :imageUrl (str "assets/units/" unit-store.selectedUnit ".png")
+                           :color (if primary?
+                                    c/color-store.primaryColor
+                                    c/color-store.secondaryColor)})))
