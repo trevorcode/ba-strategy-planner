@@ -72,7 +72,7 @@
   #html
    [:li
     (t/tool-btn {:tool "unitplacer"
-                 :tooltip "Unit Placer [R]"
+                 :tooltip "Units [R]"
                  :class "unit-placer-btn"
                  :x-bind:onclick "$store.units.toggle()"
                  :body #html [:img {:x-data nil

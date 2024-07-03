@@ -19,7 +19,7 @@
                [:nav
                 [:ul
                  [:li (tool/tool-btn {:tool "hand"
-                                      :tooltip "Move Tool [Q]"
+                                      :tooltip "Move [Q]"
                                       :body (components/icon "move")})]
                  [:li (tool/tool-btn {:tool "pen"
                                       :tooltip "Pen [W]"
@@ -39,9 +39,6 @@
                    [:g {:id "map-images"}]
                    [:g {:id "map-paths"}]]]]]]
          unit/unit-picker-el])
-
-
-
 
 (defn init []
   (-> (js/document.querySelector "body")
