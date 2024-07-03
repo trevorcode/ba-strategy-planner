@@ -54,6 +54,8 @@
                        :images (js/document.querySelector "#map-images")
                        :paths (js/document.querySelector "#map-paths")})
   (map/register-map)
+  (bases/bases-store.expand true)
+  (bases/bases-store.expand false)
   (js/feather.replace))
 
 (init)
