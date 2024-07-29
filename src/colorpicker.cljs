@@ -1,31 +1,31 @@
 (ns colorpicker
-  (:require ["alpinejs" :as a :refer [Alpine]]))
+    (:require [util :as u]))
 
-(def colors ["#88eaff"
-             "#5f8ad3"
-             "#eee1ae"
-             "#ffa788"
-             "yellow"
-             "red"
-             "green"
-             "purple"
-             "black"
-             "white"])
+  (def colors ["#88eaff"
+               "#5f8ad3"
+               "#eee1ae"
+               "#ffa788"
+               "yellow"
+               "red"
+               "green"
+               "purple"
+               "black"
+               "white"])
 
-(def color-store (do (Alpine.store "colors"
-                                   {:toggled false
-                                    :toggle (fn [primary]
-                                              (set! color-store.choosingColor primary)
-                                              (set! color-store.toggled (not color-store.toggled)))
-                                    :primaryColor (first colors)
-                                    :secondaryColor (second colors)
-                                    :choosingColor :primary
-                                    :selectColor (fn [color]
-                                                   (set! color-store.toggled false)
-                                                   (if (= color-store.choosingColor :primary)
-                                                     (set! color-store.primaryColor color)
-                                                     (set! color-store.secondaryColor color)))})
-                     (Alpine.store "colors")))
+  (def color-store (u/init-store
+                    "colors"
+                    {:toggled false
+                     :toggle (fn [primary]
+                               (set! color-store.choosingColor primary)
+                               (set! color-store.toggled (not color-store.toggled)))
+                     :primaryColor (first colors)
+                     :secondaryColor (second colors)
+                     :choosingColor :primary
+                     :selectColor (fn [color]
+                                    (set! color-store.toggled false)
+                                    (if (= color-store.choosingColor :primary)
+                                      (set! color-store.primaryColor color)
+                                      (set! color-store.secondaryColor color)))}))
 
 (defn color-picker-btn [color]
   #html [:button {:color color

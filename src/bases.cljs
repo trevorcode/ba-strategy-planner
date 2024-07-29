@@ -56,9 +56,9 @@
                  c/color-store.primaryColor
                  c/color-store.secondaryColor)}))))
 
-(def bases-store (do (Alpine.store "bases"
-                                   {:expand expand})
-                     (Alpine.store "bases")))
+(def bases-store (u/init-store
+                  "bases"
+                  {:expand expand}))
 
 (def base-expander-ui
   #html

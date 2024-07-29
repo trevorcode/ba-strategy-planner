@@ -1,6 +1,5 @@
 (ns unitpicker
   (:require
-   ["alpinejs" :refer [Alpine]]
    [util :as u]
    [colorpicker :as c]
    [toolpicker :as t]
@@ -52,18 +51,18 @@
             :valkyrie
             :wasp])
 
-(def unit-store (do (Alpine.store "units"
-                                  {:toggled false
-                                   :toggle (fn []
-                                             (set! js/this.toggled (not js/this.toggled)))
-                                   :selectedUnit (first units)
-                                   :selectedUnitUrl (str "assets/units/" (first units) ".png")
-                                   :select (fn [unit]
-                                             (set! js/this.toggled false)
-                                             (set! t/toolstore.selectedTool :unitplacer)
-                                             (set! js/this.selectedUnit unit)
-                                             (set! js/this.selectedUnitUrl (str "assets/units/" unit ".png")))})
-                    (Alpine.store "units")))
+(def unit-store (u/init-store
+                 "units"
+                 {:toggled false
+                  :toggle (fn []
+                            (set! js/this.toggled (not js/this.toggled)))
+                  :selectedUnit (first units)
+                  :selectedUnitUrl (str "assets/units/" (first units) ".png")
+                  :select (fn [unit]
+                            (set! js/this.toggled false)
+                            (set! t/toolstore.selectedTool :unitplacer)
+                            (set! js/this.selectedUnit unit)
+                            (set! js/this.selectedUnitUrl (str "assets/units/" unit ".png")))}))
 
 (defn unit-image [unit]
   #html [:img {:src (str "assets/units/" unit ".png")}])

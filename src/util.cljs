@@ -1,4 +1,5 @@
-(ns util)
+(ns util
+  (:require ["alpinejs" :as a :refer [Alpine]]))
 
 (defn distance [[x1 y1] [x2 y2]]
   (js/Math.sqrt (+ (js/Math.pow (- x2 x1) 2)
@@ -55,3 +56,7 @@
     (.appendChild group unit-container)
     (.appendChild group unit-elem)
     (.appendChild (:images svg-refs) group)))
+
+(defn init-store [store-name init-map]
+  (Alpine.store store-name init-map)
+  (Alpine.store store-name))
